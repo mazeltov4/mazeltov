@@ -21,8 +21,11 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.slack.api:slack-api-client:1.27.0")
-	implementation("org.modelmapper:modelmapper:3.1.0")
+	implementation("com.slack.api:slack-api-client:1.27.1")  // slack-sdk
+	implementation("com.slack.api:slack-api-model-kotlin-extension:1.27.1")  // slack-sdk kotlin
+	implementation("com.slack.api:slack-api-client-kotlin-extension:1.27.1")  // slack-sdk kotlin
+	implementation("org.modelmapper:modelmapper:3.1.0")  // model mapper
+	implementation("com.google.code.gson:gson:2.10")  // 구글 json parsing 라이브러리
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
