@@ -25,7 +25,7 @@ dependencies {
 	implementation("com.slack.api:slack-api-model-kotlin-extension:1.27.1")  // slack-sdk kotlin
 	implementation("com.slack.api:slack-api-client-kotlin-extension:1.27.1")  // slack-sdk kotlin
 	implementation("org.modelmapper:modelmapper:3.1.0")  // model mapper
-	implementation("com.google.code.gson:gson:2.10")  // 구글 json parsing 라이브러리
+	implementation("org.json:json:20220924")  // 기본 내장 json parser
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

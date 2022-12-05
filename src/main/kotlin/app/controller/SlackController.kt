@@ -1,48 +1,39 @@
 package app.controller
 
-import app.dto.SlashCommandDto
 import app.service.SlackService
+import org.json.JSONObject
 import org.springframework.http.MediaType
+import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.lang.String.valueOf
 
 @RestController
 @RequestMapping("/slack")
 class SlackController(
     val slackService: SlackService
 ) {
-//    fun sendMessage(): String{
-//        return slackService.sendMessage()
-//    }
-
     @PostMapping("/user", consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
-    fun userCommand(@RequestBody temp: String){
-        val tempData = temp.split("&")
-        val commandData = mutableMapOf<String, String>()
-        for(data in tempData){
-            val tempSplit = data.split("=")
-            commandData[tempSplit[0]] = tempSplit[1]
+    fun userCommand(@RequestBody body: MultiValueMap<String, String>){
+        val channelId = body["channel_id"]?.get(0)
+
+        channelId ?.let {
+            slackService.sendMessage(channelId, "user")
         }
+    }
 
-        val commandDto = SlashCommandDto(
-            token=commandData["token"],
-            teamId=commandData["team_id"],
-            teamDomain=commandData["team_domain"],
-            channelId=commandData["channel_id"],
-            channelName=commandData["channel_name"],
-            userId=commandData["user_id"],
-            userName=commandData["user_name"],
-            command=commandData["command"],
-            text=commandData["text"],
-            apiAppId=commandData["api_app_id"],
-            isEnterpriseInstall=commandData["is_enterprise_install"],
-            responseUrl=commandData["response_url"],
-            triggerId=commandData["trigger_id"],
-        )
+    @PostMapping("/interactivity", consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
+    fun userInteractivity(@RequestBody body: MultiValueMap<String, String>){
+        val payload = JSONObject(valueOf(body.getFirst("payload")))
+        val actionValue = payload.getJSONArray("actions").getJSONObject(0).getString("value")
+        val channelId = payload.getJSONObject("channel").getString("id")
 
-        slackService.sendMessage()
+        when(actionValue) {
+            "signup" -> {
+                slackService.sendMessage(channelId, "signup")
+            }
+        }
     }
 }
-
