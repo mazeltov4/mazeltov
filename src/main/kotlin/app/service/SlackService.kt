@@ -19,11 +19,10 @@ class SlackService {
         val client = Slack.getInstance().methods(token)
         val response = client.chatPostMessage { req -> req
             .channel(channelId)
-            .blocks(userCommandBlock())
             .blocks(
                     when(type) {
                     "user" -> {userCommandBlock()}
-                    else -> {signupBlock()}
+                    else -> {userCommandBlock()}
                 }
             )
         }
