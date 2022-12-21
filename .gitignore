@@ -37,3 +37,4 @@ out/
 .vscode/
 
 slack.properties
+application.properties

@@ -5,6 +5,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.15.RELEASE"
 	kotlin("jvm") version "1.6.21"
 	kotlin("plugin.spring") version "1.6.21"
+	kotlin("plugin.jpa") version "1.6.21"
+	kotlin("plugin.allopen") version "1.6.21"
+	kotlin("plugin.noarg") version "1.6.21"
 }
 
 group = "com.example"
@@ -26,6 +29,11 @@ dependencies {
 	implementation("com.slack.api:slack-api-client-kotlin-extension:1.27.1")  // slack-sdk kotlin
 	implementation("org.modelmapper:modelmapper:3.1.0")  // model mapper
 	implementation("org.json:json:20220924")  // 기본 내장 json parser
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("mysql:mysql-connector-java")
+	implementation("org.springframework.boot:spring-boot-configuration-processor")
+	implementation("javax.persistence:javax.persistence-api")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
