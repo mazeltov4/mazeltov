@@ -1,5 +1,7 @@
 package app.service
 
+import app.repository.AuthorityRepository
+import app.repository.OrganizationRepository
 import org.springframework.stereotype.Service
 import com.slack.api.Slack
 import com.slack.api.model.block.LayoutBlock
@@ -14,7 +16,10 @@ import org.springframework.stereotype.Component
 @Component
 @PropertySource("classpath:slack.properties")
 @Service
-class SlackService {
+class SlackService (
+    val organizationRepository: OrganizationRepository,
+    val authorityRepository: AuthorityRepository,
+) {
     @Value("\${slack.token}")
     lateinit var token: String
 
@@ -37,8 +42,24 @@ class SlackService {
             .triggerId(triggerId)
             .view(
                 when(type) {
-                    "signup" -> {signupView()}
-                    else -> {signupView()}
+                    "signup" -> {
+                        val orgList = organizationRepository.findByDepth(2)
+                        val orgName = ArrayList<String>()
+                        val authorityList = authorityRepository.findAll()
+                        val authorityType = ArrayList<String>()
+
+                        for (org in orgList) {
+                            orgName.add(org.name)
+                        }
+
+                        for (authority in authorityList) {
+                            authorityType.add(authority.type)
+                        }
+
+                        signupView(orgName, authorityType)
+
+                    }
+                    else -> {null}
                 }
             )
         }
@@ -63,11 +84,7 @@ class SlackService {
         }
     }
 
-    fun signupView(): View {
-        // ---------- 임시 리스트 ---------------------
-        val orgList = listOf("조직1", "조직2", "조직3", "조직4", "조직5")
-        // ---------- 임시 리스트 ---------------------
-
+    fun signupView(orgList: ArrayList<String>, authorityList: ArrayList<String>): View {
         return view { thisView -> thisView
             .callbackId("signup-modal")
             .type("modal")
@@ -93,7 +110,7 @@ class SlackService {
                 }
                 divider()
                 section {
-                    markdownText("dropdown list 선택하기")
+                    markdownText("직원 조직 선택하기")
                     accessory {
                         staticSelect {
                             placeholder("조직도 선택")
@@ -110,15 +127,15 @@ class SlackService {
                 }
                 divider()
                 section {
-                    markdownText("dropdown list 선택하기")
+                    markdownText("직원 권한 선택하기")
                     accessory {
                         staticSelect {
                             placeholder("권한 선택")
                             options {
-                                for (orgName in orgList) {
+                                for (authority in authorityList) {
                                     option {
-                                        plainText(orgName)
-                                        value(orgName)
+                                        plainText(authority)
+                                        value(authority)
                                     }
                                 }
                             }

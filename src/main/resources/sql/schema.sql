@@ -13,7 +13,9 @@ create table organization
     parents_id bigint unsigned     not null comment '상위 조직 id',
     depth      int unsigned        not null comment '조직 레벨',
     name       varchar(32)         not null comment '조직이름',
-    use_yn     char(2) default 'N' not null comment '사용여부'
+    use_yn     char(2) default 'N' not null comment '사용여부',
+    constraint organization_organization_id_fk
+        foreign key (parents_id) references organization (id)
 )
     comment '조직도';
 

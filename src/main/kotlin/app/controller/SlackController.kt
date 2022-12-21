@@ -13,7 +13,7 @@ import java.lang.String.valueOf
 @RestController
 @RequestMapping("/slack")
 class SlackController(
-    val slackService: SlackService
+    val slackService: SlackService,
 ) {
     @PostMapping("/user", consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun userCommand(@RequestBody body: MultiValueMap<String, String>){
